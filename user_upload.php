@@ -29,7 +29,7 @@ $dry_run=((isset($arga['dry_run']))?true:false);
 //create database and table (if not dry run)
 if(!$dry_run){
 	if((!isset($arga['u']))||(!isset($arga['p']))||(!isset($arga['h']))){
-		echo "Can not create table. Missing data to connect to database";
+		echo "Can not create table. Missing data to connect to database\n";
 		exit;
 	}
 	
@@ -44,25 +44,25 @@ if(!$dry_run){
 	$objDB=clsDB::createConn($u,$p,$h);
 	
 	if($objDB->isError()){
-		echo $objDB->getMsg();
+		echo $objDB->getMsg()."\n";
 		exit;
 	}
 	
 	if(!$objDB->createTable($d, $t)){
-		echo $objDB->getMsg();
+		echo $objDB->getMsg()."\n";
 		exit;
 	}
 }
 
 //stop processing futher if only create table
 if (isset($arga['create_table'])) {
-	echo "Table Created";
+	echo "Table Created\n";
 	exit;
 }
 
 //check if file parameter is set
 if(!isset($arga['file'])) {
-	echo "CSV File required";
+	echo "CSV File required\n";
 	exit;
 }
 
@@ -74,6 +74,28 @@ if($objFile->isError()) {
 }
 
 while($csv=$objFile->getRow()){
-	print_r($csv);
+	//skip empty rows
+	if(count($csv)!=3) continue;
+	
+	//check for invalid email
+	if(!preg_match("/^\w[\w.!#$%&'*+-\/=?^_`{|}~;]+@[\w.]+\w+$/",trim($csv[2]))){
+		echo "Email ".$csv[2]." invalid\n";
+		continue;
+	}
+	
+	//check for invalid name
+	if(!preg_match("/^[a-zA-Z ']+$/",trim($csv[0]))){
+		echo "Name ".$csv[0]." invalid\n";
+		continue;
+	}
+	
+	//check for invalid surname
+	if(!preg_match("/^[a-zA-Z ']+$/",trim($csv[1]))){
+		echo "Name ".$csv[1]." invalid\n";
+		continue;
+	}
+	
+	if(!dry_run) $objDB->
+	
 }
 
