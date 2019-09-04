@@ -1,4 +1,4 @@
-<?
+<?php
 // Singleton to connect db
 class clsDB {
 	

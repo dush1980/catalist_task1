@@ -4,6 +4,9 @@
  * Date    : 2019/09/04
  */
 
+include "clsDB.php";
+include "clsCSV.php";
+
 $objFile=null; //CSV file object
 $objDB=null; //DB object
 
@@ -22,13 +25,13 @@ if(isset($arga['help'])) {
 
 //open file
 if(isset($arga['file'])) {
-	//$objFile=new clsCSV($arga['file']);
+	$objFile=new clsCSV($arga['file']);
 }	
 
 //setup default values for database
-$u=((isset($arga['u'])) && ($arga['u']))?$arga['u']:'');
-$p=((isset($arga['p'])) && ($arga['p']))?$arga['p']:'');
-$h=((isset($arga['h'])) && ($arga['h']))?$arga['h']:'localhost');
+$u=(((isset($arga['u'])) && ($arga['u']))?$arga['u']:'');
+$p=(((isset($arga['p'])) && ($arga['p']))?$arga['p']:'');
+$h=(((isset($arga['h'])) && ($arga['h']))?$arga['h']:'localhost');
 $d='db_catalyist';
 
 //connect to database
@@ -46,6 +49,3 @@ if(isset($arga['create_table'])){
 		exit;
 	}
 }
-
-
-var_dump($arga);
