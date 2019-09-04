@@ -77,25 +77,39 @@ while($csv=$objFile->getRow()){
 	//skip empty rows
 	if(count($csv)!=3) continue;
 	
+	//trim extra spaces, 
+	//change to lower case, 
+	//first letter to uppercase 
+	//and assigen to varibles
+	$name=ucfirst(strtolower(trim($csv[0])));
+	$surname=ucfirst(strtolower(trim($csv[1])));
+	$email=strtolower(trim($csv[2]));
+	
 	//check for invalid email
-	if(!preg_match("/^\w[\w.!#$%&'*+-\/=?^_`{|}~;]+@[\w.]+\w+$/",trim($csv[2]))){
-		echo "Email ".$csv[2]." invalid\n";
+	if(!preg_match("/^\w[\w.!#$%&'*+-\/=?^_`{|}~;]+@[\w.]+\w+$/",$email)){
+		echo "Email ".$email." invalid\n";
 		continue;
 	}
 	
 	//check for invalid name
-	if(!preg_match("/^[a-zA-Z ']+$/",trim($csv[0]))){
-		echo "Name ".$csv[0]." invalid\n";
+	if(!preg_match("/^[a-zA-Z ']+$/",$name)){
+		echo "Name ".$name." invalid\n";
 		continue;
 	}
 	
 	//check for invalid surname
-	if(!preg_match("/^[a-zA-Z ']+$/",trim($csv[1]))){
-		echo "Name ".$csv[1]." invalid\n";
+	if(!preg_match("/^[a-zA-Z ']+$/",$surname)){
+		echo "Name ".$surname." invalid\n";
 		continue;
 	}
 	
-	if(!dry_run) $objDB->
+	if(!$dry_run) {
+		if(!$objDB->insertRow($name, $surname, $email)) {
+			echo $objDB->getMsg()."\n";			
+		}
+	}
 	
 }
+
+echo "Task 1 Complete \n";
 

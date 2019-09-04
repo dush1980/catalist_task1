@@ -1,4 +1,9 @@
 <?php
+/* Done By : Dushmantha Walakulpola 
+ * Resone  : Interview Task 1
+ * Date    : 2019/09/04
+ */
+
 // Singleton to connect db
 class clsDB {
 	
@@ -62,7 +67,14 @@ class clsDB {
   	//return : true on success, false on fail with error set
   	//can be false if uniqe not matched or name,surname,email exced length
   	public function insertRow($name, $surname, $email) {
-  	
+  		$stmt=$this->conn->prepare("INSERT INTO  users (`name`, `surname`, `email`) VALUES(?, ?, ?)");		
+		$stmt->bind_param("sss",$name,$surname, $email);
+		if(!$stmt->execute()){
+			$this->msg=$this->conn->error;
+			$this->error=true;
+			return false;
+		}
+		return true;
   	}
 }
 
