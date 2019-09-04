@@ -4,8 +4,8 @@
  * Date    : 2019/09/04
  */
 
-$objFile=false; //CSV file object
-$objDB=false; //DB object
+$objFile=null; //CSV file object
+$objDB=null; //DB object
 
 //print welcome message
 echo "Welcome to task 1 of Catalyst interview\n";

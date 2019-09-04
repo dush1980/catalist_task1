@@ -1,9 +1,9 @@
 <?
 // Singleton to connect db
 class clsDB {
-	// Hold the class instance.
-  	private static $db = null;
-  	private $conn;
+	
+  	private static $db = null; // holds the class instance.
+  	private $conn; //holds the actual connection
   
   	private $error = false;
   	private $msg = '';
@@ -18,7 +18,7 @@ class clsDB {
   	}
   	
   	//create a new connection if already not created
-  	public static function createConn() {
+  	public static function createConn($host, $user, $pwd, $db) {
 		if(!self::$db)  self::$db = new clsDB();
 		return self::$db;
   	}
