@@ -23,29 +23,57 @@ if(isset($arga['help'])) {
 	exit;
 }
 
-//open file
-if(isset($arga['file'])) {
-	$objFile=new clsCSV($arga['file']);
-}	
+//initialize dry_run variable
+$dry_run=((isset($arga['dry_run']))?true:false);
 
-//setup default values for database
-$u=(((isset($arga['u'])) && ($arga['u']))?$arga['u']:'');
-$p=(((isset($arga['p'])) && ($arga['p']))?$arga['p']:'');
-$h=(((isset($arga['h'])) && ($arga['h']))?$arga['h']:'localhost');
-$d='db_catalyist';
-
-//connect to database
-//$objDB=new clsDB::getDB($u,$p,$h,$d);
-
-//create a fresh table
-if($objDB) $createStatus=$objDB->createTable('users');
-
-//just create database and table
-if(isset($arga['create_table'])){
-	if($objDB) {
-		$objDB->createTable();
-	} else {
-		echo "";
+//create database and table (if not dry run)
+if(!$dry_run){
+	if((!isset($arga['u']))||(!isset($arga['p']))||(!isset($arga['h']))){
+		echo "Can not create table. Missing data to connect to database";
+		exit;
+	}
+	
+	//setup default values for database
+	$u=(($arga['u'])?$arga['u']:'');
+	$p=(($arga['p'])?$arga['p']:'');
+	$h=(($arga['h'])?$arga['h']:'localhost');
+	$d='db_catalyist';
+	$t='users';
+	
+	//connect to database
+	$objDB=clsDB::createConn($u,$p,$h);
+	
+	if($objDB->isError()){
+		echo $objDB->getMsg();
+		exit;
+	}
+	
+	if(!$objDB->createTable($d, $t)){
+		echo $objDB->getMsg();
 		exit;
 	}
 }
+
+//stop processing futher if only create table
+if (isset($arga['create_table'])) {
+	echo "Table Created";
+	exit;
+}
+
+//check if file parameter is set
+if(!isset($arga['file'])) {
+	echo "CSV File required";
+	exit;
+}
+
+//open file
+$objFile=new clsCSV($arga['file']);
+if($objFile->isError()) {
+	echo $objFile->getMsg();
+	exit;
+}
+
+while($csv=$objFile->getRow()){
+	print_r($csv);
+}
+
